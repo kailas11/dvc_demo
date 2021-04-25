@@ -20,4 +20,7 @@ git init
 
 dvc init
 
-dvc dd data_given/winequality.scv
+dvc dd data_given/winequality.csv
+
+git add.
+git commit -m "initial commit"
