@@ -5,22 +5,26 @@ import json
 import numpy as np
 
 params_path = "params.yaml"
-schema_path = os.path.join("prediction_service","schema_in.json")
+schema_path = os.path.join("prediction_service", "schema_in.json")
+
 
 class NotInRange (Exception):
-    def __init__(self,message = "Values Entered Not in Range"):
+    def __init__(self, message="Values Entered Not in Range"):
         self.message = message
         super().__init__(self.message)
 
+
 class NontInColumn (Exception):
-    def __init__(self,message = "Not in Columns"):
+    def __init__(self, message="Not in Columns"):
         self.message = message
         super().__init__(self.message)
+
 
 def read_params(config_path):
     with open(config_path) as yaml_file:
         config = yaml.safe_load(yaml_file)
     return config
+
 
 def predict(data):
     config = read_params(params_path)
@@ -36,46 +40,48 @@ def predict(data):
     except NotInRange:
         return "Unexpected Result"
 
-def get_schema(schema_path = schema_path):
-    with open (schema_path) as json_file:
+
+def get_schema(schema_path=schema_path):
+    with open(schema_path) as json_file:
         schema = json.load(json_file)
     return schema
 
 
 def validate_input(dict_request):
-    
+
     def _validate_cols(col):
         schema = get_schema()
         actual_cols = schema.keys()
         if col not in actual_cols:
             raise NontInColumn
-    
-    def _validate_values(col,val):
+
+    def _validate_values(col, val):
         schema = get_schema()
-        if not (schema[col]["min"]<= float(dict_request[col]) <= schema[col]["max"]):
+        if not (schema[col]["min"] <= float(dict_request[col]) <= schema[col]["max"]):
             raise NotInRange
 
-
-    for col,val in dict_request.items():
+    for col, val in dict_request.items():
         _validate_cols(col)
-        _validate_values(col,val)
+        _validate_values(col, val)
 
-    return True    
+    return True
+
 
 def form_response(dict_request):
     if validate_input(dict_request):
         data = dict_request.values()
-        data = [list(map(float,data))]
+        data = [list(map(float, data))]
         response = predict(data)
         return response
+
 
 def api_response(dict_request):
     try:
         if validate_input(dict_request):
             data = np.array([list(dict_request.values())])
             response = predict(data=data)
-            response = {"response":response}
+            response = {"response": response}
             return response
     except Exception as e:
-        response={"The Expected Range":get_schema(),"response":str(e)}
+        response = {"The Expected Range": get_schema(), "response": str(e)}
         return response
