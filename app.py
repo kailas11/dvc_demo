@@ -12,10 +12,12 @@ template_dir = os.path.join(webapp_root, "templates")
 
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
 
+
 def read_params(config_path):
     with open(config_path) as yaml_file:
         config = yaml.safe_load(yaml_file)
     return config
+
 
 def predict(data):
     config = read_params(params_path)
@@ -25,16 +27,18 @@ def predict(data):
     print(prediction)
     return prediction[0]
 
+
 def api_response(request):
     try:
         data = np.array([list(request.json.values())])
         response = predict(data)
-        response = {"response":response}
+        response = {"response": response}
         return response
     except Exception as e:
         print(e)
         error = {"error": "Something went wrong!! Try again"}
         return error
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -58,5 +62,5 @@ def index():
         return render_template("index.html")
 
 
-if __name__=="__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True) 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
