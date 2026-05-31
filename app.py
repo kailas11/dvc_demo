@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import logging
 import os
 from prediction_service import prediction
 
@@ -9,6 +10,9 @@ static_dir = os.path.join(webapp_root, "static")
 template_dir = os.path.join(webapp_root, "templates")
 
 app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", os.urandom(32))
+
+logger = logging.getLogger(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -25,13 +29,12 @@ def index():
                 return jsonify(response)
 
         except Exception as e:
-            print(e)
+            logger.exception("Prediction failed")
             error = {"error": "Something went wrong!! Try again"}
-            error = {"error": e}
             return render_template("404.html", error=error)
     else:
         return render_template("index.html")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=False)

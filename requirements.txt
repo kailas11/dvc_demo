@@ -2,12 +2,12 @@
 -e .
 
 #third party packages
-dvc
-dvc[gdrive]
-sklearn
-pandas
-pytest
-tox
-flake8
-flask
-gunicorn
+dvc>=3.0,<4.0
+dvc[gdrive]>=3.0,<4.0
+scikit-learn>=1.2,<2.0
+pandas>=1.5,<3.1
+pytest>=7.0,<10.0
+tox>=4.0,<5.0
+flake8>=6.0,<8.0
+flask>=2.3,<4.0
+gunicorn>=21.0,<27.0

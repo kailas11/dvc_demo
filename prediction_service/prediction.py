@@ -29,6 +29,9 @@ def read_params(config_path):
 def predict(data):
     config = read_params(params_path)
     model_dir_path = config["webapp_model_dir"]
+    model_dir_path = os.path.normpath(model_dir_path)
+    if not model_dir_path.startswith("prediction_service"):
+        raise ValueError("Invalid model path")
     model = joblib.load(model_dir_path)
     prediction = model.predict(data).tolist()[0]
 
@@ -57,7 +60,11 @@ def validate_input(dict_request):
 
     def _validate_values(col, val):
         schema = get_schema()
-        if not (schema[col]["min"] <= float(dict_request[col]) <= schema[col]["max"]):
+        try:
+            val_float = float(dict_request[col])
+        except (ValueError, TypeError):
+            raise NotInRange("Non-numeric value for '{}'".format(col))
+        if not (schema[col]["min"] <= val_float <= schema[col]["max"]):
             raise NotInRange
 
     for col, val in dict_request.items():
@@ -77,11 +84,15 @@ def form_response(dict_request):
 
 def api_response(dict_request):
     try:
+        if not isinstance(dict_request, dict):
+            return {"error": "Request body must be a JSON object"}
         if validate_input(dict_request):
             data = np.array([list(dict_request.values())])
             response = predict(data=data)
             response = {"response": response}
             return response
-    except Exception as e:
+    except (NotInRange, NontInColumn) as e:
         response = {"The Expected Range": get_schema(), "response": str(e)}
         return response
+    except Exception:
+        return {"error": "Something went wrong!! Try again"}
