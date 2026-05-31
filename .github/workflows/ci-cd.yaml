@@ -14,18 +14,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: "3.8"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        #pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Validate params.yaml
+      run: |
+        python -c "
+        import yaml, sys
+        with open('params.yaml') as f:
+            cfg = yaml.safe_load(f)
+        required = {
+            'base': ['project', 'random_state', 'target_col'],
+            'data_source': ['s3_source'],
+            'load_data': ['raw_data_csv'],
+            'split_data': ['train_path', 'test_path', 'test_size'],
+            'reports': ['params', 'scores'],
+        }
+        for section, keys in required.items():
+            assert section in cfg, f'Missing section: {section}'
+            for k in keys:
+                assert k in cfg[section], f'Missing key: {section}.{k}'
+        assert 'estimators' in cfg and 'ElasticNet' in cfg['estimators']
+        params = cfg['estimators']['ElasticNet']['params']
+        assert 'alpha' in params and 'l1_ratio' in params
+        assert 'model_dir' in cfg
+        assert 'webapp_model_dir' in cfg
+        print('params.yaml validation passed')
+        print(f\"  alpha={params['alpha']}, l1_ratio={params['l1_ratio']}\")
+        print(f\"  model_dir={cfg['model_dir']}\")
+        print(f\"  webapp_model_dir={cfg['webapp_model_dir']}\")
+        "
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
