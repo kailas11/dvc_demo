@@ -28,7 +28,7 @@ def index():
                 response = prediction.api_response(request.json)
                 return jsonify(response)
 
-        except Exception as e:
+        except Exception:
             logger.exception("Prediction failed")
             error = {"error": "Something went wrong!! Try again"}
             return render_template("404.html", error=error)
