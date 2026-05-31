@@ -1,1 +1,124 @@
-{"fixed acidity":{"min":4.6,"max":15.9},"volatile acidity":{"min":0.12,"max":1.58},"citric acid":{"min":0.0,"max":1.0},"residual sugar":{"min":0.9,"max":15.5},"chlorides":{"min":0.012,"max":0.611},"free sulfur dioxide":{"min":1.0,"max":72.0},"total sulfur dioxide":{"min":6.0,"max":289.0},"density":{"min":0.99007,"max":1.00369},"pH":{"min":2.74,"max":4.01},"sulphates":{"min":0.33,"max":2.0},"alcohol":{"min":8.4,"max":14.9},"TARGET":{"min":3.0,"max":8.0}}
+{
+  "fixed acidity": {
+    "min": 4.6,
+    "max": 15.9
+  },
+  "volatile acidity": {
+    "min": 0.12,
+    "max": 1.58
+  },
+  "citric acid": {
+    "min": 0.0,
+    "max": 1.0
+  },
+  "residual sugar": {
+    "min": 0.9,
+    "max": 15.5
+  },
+  "chlorides": {
+    "min": 0.012,
+    "max": 0.611
+  },
+  "free sulfur dioxide": {
+    "min": 1.0,
+    "max": 72.0
+  },
+  "total sulfur dioxide": {
+    "min": 6.0,
+    "max": 289.0
+  },
+  "density": {
+    "min": 0.99007,
+    "max": 1.00369
+  },
+  "pH": {
+    "min": 2.74,
+    "max": 4.01
+  },
+  "sulphates": {
+    "min": 0.33,
+    "max": 2.0
+  },
+  "alcohol": {
+    "min": 8.4,
+    "max": 14.9
+  },
+  "TARGET": {
+    "min": 3.0,
+    "max": 8.0
+  },
+  "indexes": [
+    {
+      "name": "idx_fixed_acidity",
+      "columns": ["fixed acidity"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_volatile_acidity",
+      "columns": ["volatile acidity"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_citric_acid",
+      "columns": ["citric acid"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_residual_sugar",
+      "columns": ["residual sugar"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_chlorides",
+      "columns": ["chlorides"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_free_sulfur_dioxide",
+      "columns": ["free sulfur dioxide"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_total_sulfur_dioxide",
+      "columns": ["total sulfur dioxide"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_density",
+      "columns": ["density"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_ph",
+      "columns": ["pH"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_sulphates",
+      "columns": ["sulphates"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_alcohol",
+      "columns": ["alcohol"],
+      "type": "btree",
+      "usage": "WHERE"
+    },
+    {
+      "name": "idx_target",
+      "columns": ["TARGET"],
+      "type": "btree",
+      "usage": "WHERE, ORDER BY"
+    }
+  ]
+}
